@@ -187,11 +187,11 @@ kill_node() {
 }
 
 store_custom_labels_taints() {
-  node_info=$(kubectl get no -l spec.ip=<%= spec.ip %> -o json)
+  node_info=$(kubectl get no -l "bosh.id=<%= spec.id %>" -o json)
 
   LABELS=$(echo "$node_info" | /var/vcap/packages/jq/bin/jq -r ".items[].metadata.labels | to_entries | map(select(.\"key\" | contains(\"$LABEL_TAINT_PREFIX\"))) | .[] | join(\"=\")")
 
-  TAINTS=$(echo "$node_info" | /var/vcap/packages/jq/bin/jq -r ".items[].spec.taints? | to_entries | map(select(.\"key\" | contains(\"LABEL_TAINT_PREFIX\")))" | .[] | .key + \"=\" + .value + \":\" + .effect")
+  TAINTS=$(echo "$node_info" | /var/vcap/packages/jq/bin/jq -r ".items[].spec.taints? | to_entries | map(select(.\"key\" | contains(\"LABEL_TAINT_PREFIX\"))) | .[] | .key + \"=\" + .value + \":\" + .effect")
 
   echo "$LABELS" > "$CUSTOM_LABEL_PATH"
   echo "$TAINTS" > "$CUSTOM_TAINT_PATH"
