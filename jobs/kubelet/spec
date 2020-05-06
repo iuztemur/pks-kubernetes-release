@@ -22,6 +22,7 @@ packages:
 - cni
 - socat
 - file-generator
+- jq
 properties:
   api-token:
     description: The token to access Kubernetes API
